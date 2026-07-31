@@ -127,12 +127,13 @@ def construir_texto_examenes(lista_examenes):
     resto = lista_examenes[1:]
     return primer_examen + construir_texto_examenes(resto)
 
-
-def genere_cierre_ca(lista_ordenes):
+#"funcion mala"
+#def genere_cierre_ca(lista_ordenes):
     
     total_ordenes = len(lista_ordenes)
     total_facturado = facturacion_total_recursiva(lista_ordenes)
     total_prioritarias = contar_ordenes_prioritarias(lista_ordenes)
+
     return total_ordenes, total_facturado, total_prioritarias
 
 
@@ -141,7 +142,7 @@ def buscar_historial():
         "Buscar historial", "Ingrese la cedula del paciente a buscar:"
     )
     if not cedula_texto:
-        return
+        return 
     try:
         cedula_buscada = int(cedula_texto)
     except ValueError:
@@ -154,15 +155,15 @@ def buscar_historial():
     if cantidad == 0:
         messagebox.showinfo(
             "Historial del paciente",
-            "La cedula", cedula_buscada, "no tiene examenes registrados.",
+            f"La cedula { cedula_buscada} no tiene examenes registrados.",
         )
         return
 
     lista_como_texto = construir_texto_examenes(tipos_examen)
     messagebox.showinfo(
         "Historial del paciente",
-        "La cedula ",cedula_buscada, "tiene" ,cantidad, "examen registrado:",
-        lista_como_texto
+        f"La cedula {cedula_buscada} tiene {cantidad} examen registrado:{lista_como_texto}",
+        
     )
 
 
@@ -171,15 +172,18 @@ def generar_cierre():
         messagebox.showinfo("Cierre de caja", "No hay ordenes registradas todavia.")
         return
 
-    total_ordenes, total_facturado, total_prioritarias = genere_cierre_ca(registros)
-
-    confirmar = messagebox.askyesno(
+    #total_ordenes, total_facturado, total_prioritarias = genere_cierre_ca(registros)
+    total_facturado = facturacion_total_recursiva(registros)
+    total_ordenes = len(registros)
+    total_prioritarias = contar_ordenes_prioritarias(registros)
+    mensaje = (
         "Cierre de caja",
-        "Total de ordenes:", total_ordenes,
-        "Total facturado:",total_facturado,
-        "Ordenes prioritarias:",total_prioritarias,
-        "Deseas cerrar caja y borrar los registros para empezar de nuevo?",
+        f"Total de ordenes: {total_ordenes}",
+        f"Total facturado: {total_facturado}",
+        f"Ordenes prioritarias: {total_prioritarias}",
+        "Deseas cerrar caja y borrar los registros para empezar de nuevo?"
     )
+    confirmar = messagebox.askyesno("Cierre de caja", mensaje)
 
     if confirmar:
         registros.clear()
